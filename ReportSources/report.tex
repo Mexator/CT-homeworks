@@ -8,15 +8,13 @@
  
 \definecolor{codegreen}{rgb}{0,0.6,0}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
-\definecolor{codepurple}{rgb}{0.0,0.58,0.82}
 \definecolor{backcolour}{rgb}{0.95,0.95,0.92}
 
 \lstdefinestyle{mystyle}{
     backgroundcolor=\color{backcolour},   
     commentstyle=\color{codegreen},
-    keywordstyle=\color{magenta},
+    keywordstyle=\color{blue},
     numberstyle=\tiny\color{codegray},
-    stringstyle=\color{codepurple},
     basicstyle=\ttfamily\footnotesize,
     breakatwhitespace=false,         
     breaklines=true,                 
@@ -64,37 +62,9 @@ Simulink schema (with transfer function block):
     \includegraphics[width=\linewidth]{Schema2.pdf}
 \end{center}
 Matlab code with solution using Laplace Transform:
-\begin{lstlisting}[language=matlab]
-    syms t x(t) s X;
-    % Given equation
-    dx = diff(x,t);
-    d2x = diff(x,t,2);
-    equation = d2x == dx + 7*x + t + 3;
-    % Laplace transform
-    trans = laplace(equation,t,s);
-    % Substituting initial conditions
-    trans = subs(trans, [laplace(x,t,s), dx(0), x(0)], [X,4,3]);
-    % Solving for X
-    sol = solve(trans,X);
-    % Inverse Laplace transform
-    sol =  ilaplace(sol, s, t);
-    % Plotting the solution
-    fplot(sol, [0 10])
-\end{lstlisting}
+\lstinputlisting[language=matlab]{../Task1/laplace.m}
 Matlab code with solution of an equation with dsolve:
-\begin{lstlisting}[language=matlab]
-    syms x(t);
-    equation = diff(x,t,2) == diff(x,t) + 7*x + t + 3;
-    % Adding conditions for given IVP
-    cond1 = x(0) == 3;
-    Dx=diff(x,t);
-    cond2 = Dx(0) == 4;
-    cond = [cond1,cond2];
-    % Using dsolve to obtain exact symbolic solution
-    sol = dsolve(eqn,cond);
-    % Plotting solution
-    fplot(sol,[0 10]);
-\end{lstlisting} 
+\lstinputlisting[language=matlab]{../Task1/exact.m}
 \subsection{Plot of the solution}
 \begin{center}
     \includegraphics[width=\linewidth]{totalPlot.eps}
@@ -103,6 +73,9 @@ Matlab code with solution of an equation with dsolve:
     because it differs from solution obtained by dsolve()
     less than by $10^{-12}$
 \end{center}
+Plotting code. Here, $sim1$ and $sim2$ are solutions 
+obtained with Simulink schemas
+\lstinputlisting[language=matlab]{../Task1/plotting.m}
 
 \section{Task 2.}
 Given system:
@@ -225,4 +198,20 @@ $$
         1 \\ u_1 \\ u_2
     \end{bmatrix}
 \end{equation*}
+\newpage
+\section{Task 5.}
+Python code listing to convert ODE to state-space:
+\lstinputlisting[language=Python]{../Task5/convert.py}
+Python code to solve DE with $scipy.integration.odeint$.\\ 
+It uses vector of coeffitients and matrix from above model:
+\lstinputlisting[language=Python]{../Task5/solve.py}
+According to eigenvalues, obtained on string 34 of code above, which are 
+$$[-2.1925824\quad  3.1925824],$$
+The ODE from task1 is unstable, and its solution diverges.
+\section{Used software.}
+\begin{itemize}
+    \item Python 3.8.1
+    \item Matlab R2018b 9.5.0
+\end{itemize}
+All software was run under Manjaro Linux with 5.4.18-rt kernel
 \end{document}
