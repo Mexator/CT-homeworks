@@ -48,9 +48,9 @@ Calculation of transfer function:\\
 Given equation:
 $$x''=x'+7x+t+3, x'(0)=4, x(0)=3$$
 Introduce new operator: $p=\frac{d}{dt}$
-$$p^2x = px+7x+t+3$$
-$$x(p^2-p-7)=t+3$$
-$$x=\frac{1}{(p^2-p-7)}(t+3)$$
+$$p^2X = pX+7X+t+3$$
+$$X(p^2-p-7)=t+3$$
+$$X=\frac{1}{(p^2-p-7)}(t+3)$$
 Therefore, our transfer function is 
 $$T=\frac{1}{(s^2-s-7)}$$
 Now we can build Simulink schema with transfer function 
@@ -79,7 +79,7 @@ obtained with Simulink schemas
 
 \section{Task 2.}
 Given system:
-$$3x'''+3x'-3=2t-2, y=3x'$$
+$$3x''+3x'-3=2t-2, y=3x'$$
 After simplification:
 $$x''=-x'+\frac{2}{3}t+\frac{1}{3}$$
 $$\begin{cases}
@@ -103,8 +103,8 @@ Hence, state-space representation of our system is:
     \end{bmatrix}
     +
     \begin{bmatrix}
-        \frac{2}{3} & 0 \\
-        0 & \frac{1}{3}
+        0 & 0 \\
+        \frac{2}{3} & \frac{1}{3}
     \end{bmatrix}
     \begin{bmatrix}
         t \\ 1
@@ -147,7 +147,7 @@ $$
     \dot{x_2}=x_3\\
     \dot{x_3}=x_4\\
     \dot{x_4}=-\frac{2}{3}x_4+x_3+-\frac{2}{3}x_2
-    +\frac{5}{3}u_2+\frac{1}{3}u_2+1\\
+    +\frac{1}{3}u_1+\frac{5}{3}u_2+1\\
     y=x_2+u_2
 \end{cases}
 $$
