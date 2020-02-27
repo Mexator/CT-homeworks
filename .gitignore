@@ -1,3 +1,7 @@
+*.vscode
 *.autosave
 *.aux
 *.out
+!report.pdf
+ReportSources/*
+!*.tex
