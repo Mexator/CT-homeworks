@@ -4,5 +4,4 @@
 *.out
 !report.pdf
 ReportSources/*
-!/ReportSources/*T1*.pdf
 !*.tex
