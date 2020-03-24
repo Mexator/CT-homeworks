@@ -5,6 +5,7 @@
 \usepackage{hyperref}
 \usepackage{listings}
 \usepackage{xcolor}
+\usepackage{fancyhdr}
  
 \definecolor{codegreen}{rgb}{0,0.6,0}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
@@ -30,11 +31,16 @@
 
 \lstset{style=mystyle}
 
-\title{Contol theory Homework \#1 report}
-\author{Anton Brisilin, BS18-02 Student}
-\date{\today}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Contol theory Homework \#1 report}
+\rhead{Anton Brisilin, BS18-02 Student}
+\fancyfoot[R]{\today}
+\fancyfoot[C]{\thepage}
+\renewcommand{\footrulewidth}{1pt}
+\renewcommand{\headrulewidth}{1pt}
+
 \begin{document}
-\maketitle
 \section{Task 1.}
 
 \section{Used software.}
