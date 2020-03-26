@@ -33,8 +33,9 @@
 
 \pagestyle{fancy}
 \fancyhf{}
-\lhead{Contol theory Homework \#1 report}
-\rhead{Anton Brisilin, BS18-02 Student}
+\lhead{Contol theory Homework \#3 report}
+\rhead{Anton Brisilin, BS18-02 Student, \\ 
+a.brisilin@innopolis.university}
 \fancyfoot[R]{\today}
 \fancyfoot[C]{\thepage}
 \renewcommand{\footrulewidth}{1pt}
@@ -42,7 +43,37 @@
 
 \begin{document}
 \section{Task 1.}
-
+My name is \textit{Anton Brisilin}, and my email is 
+\textit{a.brisilin@innopolis.university}. 
+My generated variant is \textbf{F}.
+\section{Task 2.}
+\subsection*{Part A.}
+Design PD-controller that tracks time varying reference states i.e.
+$[x^*(t), \dot{x}^*(t)]$ as closely as possible. Test your controller on different
+trajectories, at least two. System: $x + \mu x + kx = u$, see variants below.\\
+For variant F, $\mu = 63, k = 15$
+Our open-loop system equation is 
+\begin{equation}
+    \ddot{x}+63\ddot{x}+15x=u,
+\end{equation}
+where $x=x(t)$, $u=u(t)$\\
+At first, let's find open-loop transfer function, applying Laplace transform 
+to each part:
+\begin{eqnarray*}
+    s^2X+63 sX+15X=U\\
+    X = \frac{1}{s^2+63 s + 15}\ U,
+\end{eqnarray*}
+where $X=X(s)$ - Laplace transform of $x$, and $U=U(s)$ - Laplace transform of $u$.\\
+As a desired trajectory $[x^*(t), \dot{x}^*(t)]$ I have chosen 
+\begin{equation}
+    x^*(t)=sin(t)+t, 
+    \dot{x}^*(t)=cos(t)+1.
+\end{equation}
+Our controller is required to be PD-controller. Hence, we have following formula
+for our input $u(t)$:
+\begin{equation}
+    u(t) = K_p x(t) + K_d\dot{x}(t)
+\end{equation}
 \section{Used software.}
 \begin{itemize}
     \item Python 3.8.1
