@@ -53,20 +53,20 @@ My generated variant is \textbf{F}.
         trajectories, at least two. System: $x + \mu x + kx = u$, see variants below.\\
         For variant F, $\mu = 63, k = 15$
         Our open-loop system equation is 
-        \begin{equation}
+        \begin{equation*}
             \ddot{x}+63\dot{x}+15x=u,
-        \end{equation}
+        \end{equation*}
         where $x=x(t)$, $u=u(t)$\\
         Our controller is required to be PD-controller. Hence, we have following formula
         for our input $u(t)$:
-        \begin{equation}
+        \begin{equation*}
             u(t) = K_p e(t) + K_d\dot{e}(t)
-        \end{equation}
+        \end{equation*}
         As I will use \texttt{odeint()} function from \texttt{scipy.integrate} module,
         I will need a formula for a derivative vector of $\vec{x} = [x(t),\dot{x}(t)]^T$: 
         $\dot{\vec{x}} = [\dot{x}(t),\ddot{x}(t)]^T$. Hence I should convert my system to 
         state-space form.
-        \begin{equation}
+        \begin{equation*}
             \begin{bmatrix}
                 \dot{x}(t)\\
                 \ddot{x}(t)
@@ -86,9 +86,9 @@ My generated variant is \textbf{F}.
                 1
             \end{bmatrix}
             u
-        \end{equation}
+        \end{equation*}
         Adding our controller, we get 
-        \begin{equation}
+        \begin{equation*}
             \begin{bmatrix}
                 \dot{x}(t)\\
                 \ddot{x}(t)
@@ -121,7 +121,7 @@ My generated variant is \textbf{F}.
                 \dot{x}(t)
             \end{bmatrix}
             \right)
-        \end{equation}
+        \end{equation*}
         Now my goal is implement such a system in Python, you can find it in 
         \texttt{Task2/pd.py}. First of all, I declared $\mu$, k, right time 
         boudary and step for numerical solution as constants
@@ -175,15 +175,15 @@ My generated variant is \textbf{F}.
         as it can bee seen from the plot. The gains are $K_p = 2000$, $K_d = 13$.
     \subsection*{Part C. Proving stability}
         For the controlled system 
-        \begin{equation}
+        \begin{equation*}
             \begin{cases}
                 \dot{x}=Ax+Bu\\
                 u = -Kx
             \end{cases}
-        \end{equation}
+        \end{equation*}
         to be stable, all real parts of eigenvalues of matrix $[A-BK]$ should be
         negative. In our case, we have
-        \begin{equation}
+        \begin{equation*}
             \begin{cases}
                 \dot{x}=
                 \begin{bmatrix}
@@ -204,7 +204,7 @@ My generated variant is \textbf{F}.
                 \end{bmatrix}
                 e
             \end{cases}
-        \end{equation}
+        \end{equation*}
         \begin{eqnarray*}
             A-BK = 
             \begin{bmatrix}
@@ -239,18 +239,18 @@ My generated variant is \textbf{F}.
         \end{eqnarray*}
         Using Matlab's \texttt{eig()} function, I obtained the eigenvalues, that 
         are
-        \begin{equation}
+        \begin{equation*}
             eigenvalues = 
             \begin{bmatrix}
                 -38 + 23.8956i\\
                 -38 - 23.8956i
             \end{bmatrix}
-        \end{equation}
+        \end{equation*}
         As it can be seen, they have negative real parts, so the controlled system
         is stable.
     \subsection*{Part D.}
     Think of how you would implement PD control for a linear system:
-    \begin{equation}
+    \begin{equation*}
         \begin{bmatrix}
             \dot{x_1}\\
             \dot{x_2}
@@ -264,19 +264,42 @@ My generated variant is \textbf{F}.
             x_1\\
             x_2
         \end{bmatrix}
-    \end{equation}
+    \end{equation*}
     This system is autonomous MIMO system. I need to add controller to it to 
     make it stable. First of all, let's check its stability by looking to its 
     eigenvalues, obtained with Python's \texttt{numply.linalg.eig()}.
-    \begin{equation}
+    \begin{equation*}
         eigenvalues = 
         \begin{bmatrix}
             10.94\\
             -5.94
         \end{bmatrix}
-    \end{equation}
+    \end{equation*}
     As can be seen, it is unstable, because it has eigenvalue with positive
-    real part. Thus, we need to add controller to the system.
+    real part. Thus, we need to add controller to the system. We do not want our 
+    system to keep any trajectory, we just want to stabilize it. Therefore, we 
+    want $\dot{x}$ go to zero in equation
+    \begin{equation*}
+        \dot{x} = Ax + B(K_px + K_d\dot{x}),
+    \end{equation*}
+    where $K_p$ and $K_d$ are proportional and derivative gains respectively, and
+    $x$ is state vector.\\
+    If we want to implement that system, we should express $\dot{x}$ in terms of
+    $x$
+    \begin{eqnarray*}
+        \dot{x} = Ax + B(K_px + K_d\dot{x})\\
+        \dot{x} = (A + BK_p)x + BK_d\dot{x}\\
+        (I-BK_d)\dot{x}= (A + BK_p)x\\
+        \dot{x}= (I-BK_d)^{-1}(A + BK_p)x\\
+    \end{eqnarray*}
+    But if we pick differential gain $K_d = B^{-1}$, our equation will look like
+    \begin{equation*}
+        0 = (A + BK_p)x
+    \end{equation*}
+    That means that implemented PD control is applicable only to $x \in N(A+BK_p)$,
+    i.e. such vectors $x$ that are in nullspace of $A+BK_p$. Hence, implemented 
+    controller is not suitable for us. 
+    \subsection*{Part E.} 
 \section{Used software.}
 \begin{itemize}
     \item Python 3.8.1
