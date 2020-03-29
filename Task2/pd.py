@@ -24,8 +24,8 @@ def f_dot_des(t):
 ref_x = get_ref(final_time,step,f_des)[1]
 ref_x_dot = get_ref(final_time,step,f_dot_des)[1]
 
-kp = 2000
-kd = 13
+kp = 5
+kd = 5
 
 def controlled_system(x,t):
     error = f_des(t) - x[0]
@@ -48,6 +48,6 @@ plt.plot(times, ref_x_dot, label = 'ref_x_dot')
 plt.xlabel('time')
 plt.ylabel('x(t)')
 plt.legend()
-# plt.show()
+plt.show()
 
-f.savefig("ReportSources/2b_2.pdf", bbox_inches='tight')
+# f.savefig("ReportSources/2a_tr3.pdf", bbox_inches='tight')
