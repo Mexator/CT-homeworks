@@ -40,7 +40,78 @@
 \renewcommand{\headrulewidth}{1pt}
 
 \begin{document}
-\section{Task 1.}
+\section{Task 1}
+My name is \textit{Anton Brisilin}, and my email is 
+\textit{a.brisilin@innopolis.university}, so my generated variant is \textbf{F}.
+\section{Task 2}
+    \subsection{Write equations of motion of the system in manipulator form}
+    Source system of equations:
+    \begin{equation}\label{source_eq}
+        \begin{cases}
+            (M+m)\ddot{x}-mlcos(\theta)\ddot{\theta}+mlsin(\theta)\dot\theta^2=F\\
+            -cos(\theta)\ddot{x}+l\dot{\theta}-gsin(\theta)=0
+        \end{cases}
+    \end{equation}
+    Manipulator form:
+    \begin{equation}
+        \begin{cases}\label{desired_form}
+            M(q)\ddot{q}+n(q,\dot{q})=Bu\\
+            u=F\\
+            q=\begin{bmatrix}x \\ \theta\end{bmatrix}
+        \end{cases}
+    \end{equation}
+    My goal is to transform \ref{source_eq} to the form of \ref{desired_form}. 
+    To do it I can transform first equation of \ref{source_eq} to the form of
+    \begin{equation}\label{first_part}
+        \begin{bmatrix}
+            M+m & -mlcos(\theta)
+        \end{bmatrix}
+        \begin{bmatrix}
+            \ddot x \\ 
+            \ddot\theta
+        \end{bmatrix}
+         + (mlsin(\theta)\dot\theta^2) = [1]u
+    \end{equation}
+    This already is motion equation in standart (manipulator) form. But for this
+    equation to describe motion of our system it should also consider second
+    equation of system \ref{source_eq}. Therefore, our equation \ref{first_part}
+    becomes
+    \begin{equation}
+        \begin{bmatrix}
+            M+m & -mlcos(\theta) \\
+            -cos(\theta) & 0
+        \end{bmatrix}
+        \begin{bmatrix}
+            \ddot x \\ 
+            \ddot\theta
+        \end{bmatrix}
+        +
+        \begin{bmatrix}
+            mlsin(\theta)\dot\theta^2\\
+            l\dot\theta-gsin\theta
+        \end{bmatrix}
+        = 
+        \begin{bmatrix}
+            1\\
+            0
+        \end{bmatrix}u
+    \end{equation}
+    \subsection{Write dynamics of the system in control affine nonlinear form}
+    Control affine nonlinear form:
+    \begin{equation}
+        \begin{cases}
+            \dot z = f(z) + g(z)u\\
+            u=F\\
+            z = 
+            \begin{bmatrix}
+                x&
+                \theta&
+                \dot x&
+                \dot \theta    
+            \end{bmatrix}^T
+        \end{cases}
+    \end{equation}
+    
 \section{Used software.}
 \begin{itemize}
     \item Python 3.8.1
