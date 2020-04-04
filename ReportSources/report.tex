@@ -49,7 +49,7 @@ My name is \textit{Anton Brisilin}, and my email is
     \begin{equation}\label{source_eq}
         \begin{cases}
             (M+m)\ddot{x}-mlcos(\theta)\ddot{\theta}+mlsin(\theta)\dot\theta^2=F\\
-            -cos(\theta)\ddot{x}+l\dot{\theta}-gsin(\theta)=0
+            -cos(\theta)\ddot{x}+l\ddot{\theta}-gsin(\theta)=0
         \end{cases}
     \end{equation}
     Manipulator form:
@@ -60,8 +60,8 @@ My name is \textit{Anton Brisilin}, and my email is
             q=\begin{bmatrix}x \\ \theta\end{bmatrix}
         \end{cases}
     \end{equation}
-    My goal is to transform \ref{source_eq} to the form of \ref{desired_form}. 
-    To do it I can transform first equation of \ref{source_eq} to the form of
+    My goal is to transform (\ref{source_eq}) to the form of (\ref{desired_form}). 
+    To do it I can transform first equation of (\ref{source_eq}) to the form of
     \begin{equation}\label{first_part}
         \begin{bmatrix}
             M+m & -mlcos(\theta)
@@ -74,12 +74,12 @@ My name is \textit{Anton Brisilin}, and my email is
     \end{equation}
     This already is motion equation in standart (manipulator) form. But for this
     equation to describe motion of our system it should also consider second
-    equation of system \ref{source_eq}. Therefore, our equation \ref{first_part}
+    equation of system (\ref{source_eq}). Therefore, our equation (\ref{first_part})
     becomes
     \begin{equation}
         \begin{bmatrix}
             M+m & -mlcos(\theta) \\
-            -cos(\theta) & 0
+            -cos(\theta) & l
         \end{bmatrix}
         \begin{bmatrix}
             \ddot x \\ 
@@ -88,7 +88,28 @@ My name is \textit{Anton Brisilin}, and my email is
         +
         \begin{bmatrix}
             mlsin(\theta)\dot\theta^2\\
-            l\dot\theta-gsin\theta
+            -gsin\theta
+        \end{bmatrix}
+        = 
+        \begin{bmatrix}
+            1\\
+            0
+        \end{bmatrix}u
+    \end{equation}
+    And with substitution of numbers from variant \textbf{F}:
+    \begin{equation}
+        \begin{bmatrix}
+            11.6 & -7.298 * cos(\theta) \\
+            -cos(\theta) & 0.89
+        \end{bmatrix}
+        \begin{bmatrix}
+            \ddot x \\ 
+            \ddot\theta
+        \end{bmatrix}
+        +
+        \begin{bmatrix}
+            7.298*sin(\theta)\dot\theta^2\\
+            -9.81*sin\theta
         \end{bmatrix}
         = 
         \begin{bmatrix}
@@ -98,7 +119,7 @@ My name is \textit{Anton Brisilin}, and my email is
     \end{equation}
     \subsection{Write dynamics of the system in control affine nonlinear form}
     Control affine nonlinear form:
-    \begin{equation}
+    \begin{equation}\label{desired_form2}
         \begin{cases}
             \dot z = f(z) + g(z)u\\
             u=F\\
@@ -111,7 +132,223 @@ My name is \textit{Anton Brisilin}, and my email is
             \end{bmatrix}^T
         \end{cases}
     \end{equation}
-    
+    The general look of our system (\ref{source_eq}) in form of (\ref{desired_form2})
+    is:
+    \begin{equation}
+        \begin{bmatrix}
+            \dot x\\
+            \dot \theta\\
+            \ddot x\\
+            \ddot \theta    
+        \end{bmatrix}
+        =
+        f(\begin{bmatrix}
+            x\\
+            \theta\\
+            \dot x\\
+            \dot \theta    
+        \end{bmatrix})
+        +
+        g(\begin{bmatrix}
+            x\\
+            \theta\\
+            \dot x\\
+            \dot \theta    
+        \end{bmatrix})F
+    \end{equation}
+    It's pretty obvious that one can easily express $\dot x$ and $\dot \theta$ 
+    through $z$:
+    \begin{equation}
+        \begin{bmatrix}
+            \dot x\\
+            \dot \theta
+        \end{bmatrix}
+        =
+        \begin{bmatrix}
+            \dot x\\
+            \dot \theta    
+        \end{bmatrix}
+        +
+        \begin{bmatrix}
+            0\\
+            0\\    
+        \end{bmatrix}F
+    \end{equation}
+    So the goal is to express $\ddot x$ and $\ddot \theta$ through $x, \dot x, 
+    \theta$ and $\dot \theta$. From the second equation of system (\ref{source_eq}):
+    \begin{equation}\label{x_ddot}
+        \ddot x = \frac{l\ddot\theta - gsin(\theta)}{cos(\theta)}
+    \end{equation}
+    Substituting (\ref{x_ddot}) to the first equation of (\ref{source_eq}), we can 
+    express $\ddot{\theta}$:
+    \begin{gather*}
+        \ddot{\theta}=
+        \frac
+        {(M+m)\ddot{x}+mlsin(\theta)\dot \theta^2-F}
+        {mlcos(\theta)}
+        \\
+        \ddot{\theta}=
+        \frac
+        {(M+m) (l\ddot \theta - gsin(\theta))}
+        {mlcos^2(\theta)}
+        +
+        tg(\theta) \dot \theta^2
+        - 
+        \frac
+        {F}
+        {mlcos(\theta)}
+        \\
+        \ddot{\theta}=
+        \frac
+        {(M+m)l\ddot\theta}
+        {mlcos^2(\theta)}
+        - 
+        \frac
+        {(M+m)gsin(\theta)}
+        {mlcos^2(\theta)}
+        +
+        tg(\theta) \dot \theta^2
+        - 
+        \frac
+        {F}
+        {mlcos(\theta)}
+        \\
+        \ddot{\theta}
+        \left(
+            \frac
+            {mlcos^2(\theta)-(M+m)l}
+            {mlcos^2(\theta)}
+        \right)=
+        - 
+        \frac
+        {(M+m)gsin(\theta)}
+        {mlcos^2(\theta)}
+        +
+        tg(\theta)\dot \theta^2 
+        -
+        \frac
+        {F}
+        {mlcos(\theta)}
+        \\
+        \ddot\theta =
+        \frac
+        {-  \frac
+            {(M+m)gsin(\theta)}
+            {mlcos^2(\theta)}
+            +
+            tg(\theta)\dot \theta^2
+            - 
+            \frac
+            {F}
+            {mlcos(\theta)}
+        }
+        {
+            \frac
+            {mlcos^2(\theta)-(M+m)l}
+            {mlcos^2(\theta)}
+        }
+        \\
+        \ddot\theta = 
+        \frac
+        {-(M+m)gsin(\theta) + mlcos(\theta)sin(\theta)\dot\theta^2 - Fcos(\theta)}
+        {mlcos^2(\theta)-(M+m)l}
+        \\
+    \end{gather*}
+    \begin{equation}\label{theta_ddot}
+        \ddot\theta = 
+        \frac
+        {(M+m)gsin(\theta) - mlcos(\theta)sin(\theta)\dot \theta^2}
+        {l((M+m) - mcos^2(\theta))}
+        +
+        \frac
+        {Fcos(\theta)}
+        {l((M+m) - mcos^2(\theta))}
+    \end{equation}
+    Now, substituting (\ref{theta_ddot}) to (\ref{x_ddot}):
+    \begin{gather*}
+        \ddot x = 
+        \frac
+        {(M+m)gtg(\theta) - mlsin(\theta)\dot \theta^2}
+        {(M+m) - mcos^2(\theta)}
+        +
+        \frac
+        {F}
+        {(M+m) - mcos^2(\theta)}
+        -
+        gtg(\theta)
+    \end{gather*}
+    \begin{equation}
+        \ddot x = 
+        \frac
+        {- mlsin(\theta)\dot \theta^2 + mgsin(\theta)cos(\theta)}
+        {(M+m) - mcos^2(\theta)}
+        +
+        \frac
+        {F}
+        {(M+m) - mcos^2(\theta)}
+    \end{equation}
+    Hence, our system (\ref{source_eq}) in control affine nonlinear form can be
+    written as:
+    \begin{equation}
+        \begin{bmatrix}
+            \dot x\\
+            \dot \theta\\
+            \ddot x\\
+            \ddot \theta    
+        \end{bmatrix}
+        =
+        \begin{bmatrix}
+            \dot x\\
+            \dot \theta\\
+            \frac
+            {- mlsin(\theta)\dot \theta^2 + mgsin(\theta)cos(\theta)}
+            {(M+m) - mcos^2(\theta)}\\
+            \frac
+            {(M+m)gsin(\theta) - mlcos(\theta)sin(\theta)\dot \theta^2}
+            {l((M+m) - mcos^2(\theta))}
+        \end{bmatrix}
+        +
+        \begin{bmatrix}
+            0\\0\\
+            \frac
+            {1}
+            {(M+m) - mcos^2(\theta)}\\
+            \frac
+            {cos(\theta)}
+            {(M+m) - mcos^2(\theta)}
+        \end{bmatrix}
+        F
+    \end{equation}
+    And with substitution of numbers from variant \textbf{F}:
+    % Everything becomes even more ugly
+    \begin{equation}
+        \begin{bmatrix}
+            \dot x\\
+            \dot \theta\\
+            \ddot x\\
+            \ddot \theta    
+        \end{bmatrix}
+        =
+        \begin{bmatrix}
+            \dot x\\
+            \dot \theta\\
+            \frac
+            {- 7,298sin(\theta)\dot \theta^2 + 80,442sin(\theta)cos(\theta)}
+            {11.6 - 8.2cos^2(\theta)}\\
+            \frac
+            {113,796sin(\theta) - 7,298cos(\theta)sin(\theta)\dot \theta^2}
+            {10.324 - 7.298cos^2(\theta)}
+        \end{bmatrix}
+        +
+        \begin{bmatrix}
+            0\\0\\
+            \frac{1}
+            {11.6 - 8.2cos^2(\theta)}\\
+            \frac{cos(\theta)}
+            {11.6 - 8.2cos^2(\theta)}\\
+        \end{bmatrix}
+        F
+    \end{equation}
 \section{Used software.}
 \begin{itemize}
     \item Python 3.8.1
