@@ -1,0 +1,11 @@
+F3:
+//z is z_2, k is z_4 
+d/dz (- 7.298sin(z)(k)^2 + 80.442sin(z)cos(z))/(11.6 - 8.2cos^2(z)) +   u/(11.6 - 8.2cos^2(z))
+d/dk (- 7.298sin(z)(k)^2 + 80.442sin(z)cos(z))/(11.6 - 8.2cos^2(z)) +   u/(11.6 - 8.2cos^2(z))
+d/du (- 7.298sin(z)(k)^2 + 80.442sin(z)cos(z))/(11.6 - 8.2cos^2(z)) +   u/(11.6 - 8.2cos^2(z))
+
+F4:
+//z is z_2, k is z_4 
+d/dz(113.796sin(z) - 7.298cos(z)sin(z)k^2)/(10.324 - 7.298cos^2(z)) + cos(z)u/(11.6 - 8.2cos^2(z))
+d/dk(113.796sin(z) - 7.298cos(z)sin(z)k^2)/(10.324 - 7.298cos^2(z)) + cos(z)u/(11.6 - 8.2cos^2(z))
+d/du(113.796sin(z) - 7.298cos(z)sin(z)k^2)/(10.324 - 7.298cos^2(z)) + cos(z)u/(11.6 - 8.2cos^2(z))

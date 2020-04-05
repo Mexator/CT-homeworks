@@ -132,30 +132,6 @@ My name is \textit{Anton Brisilin}, and my email is
             \end{bmatrix}^T
         \end{cases}
     \end{equation}
-    The general look of our system (\ref{source_eq}) in form of (\ref{desired_form2})
-    is:
-    \begin{equation}
-        \begin{bmatrix}
-            \dot x\\
-            \dot \theta\\
-            \ddot x\\
-            \ddot \theta    
-        \end{bmatrix}
-        =
-        f(\begin{bmatrix}
-            x\\
-            \theta\\
-            \dot x\\
-            \dot \theta    
-        \end{bmatrix})
-        +
-        g(\begin{bmatrix}
-            x\\
-            \theta\\
-            \dot x\\
-            \dot \theta    
-        \end{bmatrix})F
-    \end{equation}
     It's pretty obvious that one can easily express $\dot x$ and $\dot \theta$ 
     through $z$:
     \begin{equation}
@@ -317,7 +293,7 @@ My name is \textit{Anton Brisilin}, and my email is
             {cos(\theta)}
             {(M+m) - mcos^2(\theta)}
         \end{bmatrix}
-        F
+        u
     \end{equation}
     And with substitution of numbers from variant \textbf{F}:
     % Everything becomes even more ugly
@@ -333,10 +309,10 @@ My name is \textit{Anton Brisilin}, and my email is
             \dot x\\
             \dot \theta\\
             \frac
-            {- 7,298sin(\theta)\dot \theta^2 + 80,442sin(\theta)cos(\theta)}
+            {- 7.298sin(\theta)\dot \theta^2 + 80.442sin(\theta)cos(\theta)}
             {11.6 - 8.2cos^2(\theta)}\\
             \frac
-            {113,796sin(\theta) - 7,298cos(\theta)sin(\theta)\dot \theta^2}
+            {113.796sin(\theta) - 7.298cos(\theta)sin(\theta)\dot \theta^2}
             {10.324 - 7.298cos^2(\theta)}
         \end{bmatrix}
         +
@@ -347,8 +323,171 @@ My name is \textit{Anton Brisilin}, and my email is
             \frac{cos(\theta)}
             {11.6 - 8.2cos^2(\theta)}\\
         \end{bmatrix}
-        F
+        u
     \end{equation}
+    \subsection{Linearize nonlinear dynamics of the systems around equilibrium point
+    $\vec{z} = [0\ 0\ 0\ 0]^T$}
+    General form of linearized equation:
+    \begin{equation}
+        \delta \dot z = A \delta z + B \delta u 
+    \end{equation}
+    Let's begin with checking, whether $\vec{z} = [0\ 0\ 0\ 0]^T$ is really an 
+    equilibrium point:
+    \begin{equation}
+        \begin{cases}
+            \dot x = 0\\
+            \dot \theta = 0\\
+            \ddot x = 0 +  
+            \frac{1}
+            {11.6 - 8.2cos^2(\theta)}
+            u_e = 0\\
+            \ddot \theta = 0 +  
+            \frac{cos(\theta)}
+            {11.6 - 8.2cos^2(\theta)}u_e =0
+        \end{cases}
+    \end{equation}
+    It's seen that last two equations are true, iff $u_e=0$.
+    If our system is in form
+    \begin{equation}
+        \begin{bmatrix}
+            \dot x_1\\
+            \dot x_2\\
+            \dot x_3\\
+            \dot x_4\\
+        \end{bmatrix}
+        =
+        \begin{bmatrix}
+            f_1(z,u)\\
+            f_2(z,u)\\
+            f_3(z,u)\\
+            f_4(z,u)\\
+        \end{bmatrix}
+    \end{equation}
+    Then, to linearize it, we should found such matrices $A$ and $B$, that
+    \begin{equation}
+        \begin{cases}
+            A=
+            \begin{bmatrix}
+                \frac
+                {\partial f_1}
+                {\partial z_1}|_{z_0,u_0} &
+                \frac
+                {\partial f_1}
+                {\partial z_2}|_{z_0,u_0} &
+                \frac
+                {\partial f_1}
+                {\partial z_3}|_{z_0,u_0} &
+                \frac
+                {\partial f_1}
+                {\partial z_4}|_{z_0,u_0} \\
+                \frac
+                {\partial f_2}
+                {\partial z_1}|_{z_0,u_0} &
+                \frac
+                {\partial f_2}
+                {\partial z_2}|_{z_0,u_0} &
+                \frac
+                {\partial f_2}
+                {\partial z_3}|_{z_0,u_0} &
+                \frac
+                {\partial f_2}
+                {\partial z_4}|_{z_0,u_0} \\
+                \frac
+                {\partial f_3}
+                {\partial z_1}|_{z_0,u_0} &
+                \frac
+                {\partial f_3}
+                {\partial z_2}|_{z_0,u_0} &
+                \frac
+                {\partial f_3}
+                {\partial z_3}|_{z_0,u_0} &
+                \frac
+                {\partial f_3}
+                {\partial z_4}|_{z_0,u_0} \\
+                \frac
+                {\partial f_4}
+                {\partial z_1}|_{z_0,u_0} &
+                \frac
+                {\partial f_4}
+                {\partial z_2}|_{z_0,u_0} &
+                \frac
+                {\partial f_4}
+                {\partial z_3}|_{z_0,u_0} &
+                \frac
+                {\partial f_4}
+                {\partial z_4}|_{z_0,u_0} \\
+            \end{bmatrix}\\
+            B=
+            \begin{bmatrix}
+                \frac
+                {\partial f_1}
+                {\partial u}|_{z_0,u_0} \\
+                \frac
+                {\partial f_2}
+                {\partial u}|_{z_0,u_0} \\
+                \frac
+                {\partial f_3}
+                {\partial u}|_{z_0,u_0} \\
+                \frac
+                {\partial f_4}
+                {\partial u}|_{z_0,u_0} \\
+            \end{bmatrix}
+        \end{cases}
+    \end{equation}
+    In our case, functions $f_1, ... f_4$ can be taken from previous part of the
+    task. Now let's compute the matrices, considering
+    \begin{equation}
+        \begin{cases}
+        z = 
+        \begin{bmatrix}
+            z_1\\
+            z_2\\
+            z_3\\
+            z_4\\
+        \end{bmatrix} = 
+        \begin{bmatrix}
+            x\\
+            \theta\\
+            \dot x\\
+            \dot \theta    
+        \end{bmatrix}\\
+        f_1 = z_3\\
+        f_2 = z_4\\
+        f_3 = \frac
+        {- 7.298sin(z_2)z_4^2 + 80.442sin(z_2)cos(z_2)}
+        {11.6 - 8.2cos^2(z_2)}
+        +
+        \frac{u}
+        {11.6 - 8.2cos^2(z_2)}
+        \\
+        f_4 = \frac
+        {113.796sin(z_2) - 7.298cos(z_2)sin(z_2)z_4^2}
+        {10.324 - 7.298cos^2(z_2)}
+        +
+        \frac{cos(z_2)u}
+        {11.6 - 8.2cos^2(z_2)}\\
+        \end{cases}
+    \end{equation}
+    \begin{equation}
+        \begin{cases}
+            A=
+            \begin{bmatrix}
+                0 & 0 & 1 & 0 \\
+                0 & 0 & 0 & 1 \\
+                0 & 23.66 & 0 & 0\\
+                0 & 37.6  & 0 & 0\\
+            \end{bmatrix}\\
+            B=
+            \begin{bmatrix}
+                0 \\
+                0 \\
+                0.086 \\
+                0.294 \\
+            \end{bmatrix}
+        \end{cases}
+    \end{equation}
+    All the derivatives were computed with Wolfram Alpha and my calculator.
+    Inputs for Wolfram differentiation can be found in \texttt{Task2/wolfram\_inputs.txt}
 \section{Used software.}
 \begin{itemize}
     \item Python 3.8.1
