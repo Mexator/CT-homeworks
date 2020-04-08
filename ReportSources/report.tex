@@ -468,7 +468,7 @@ My name is \textit{Anton Brisilin}, and my email is
         {11.6 - 8.2cos^2(z_2)}\\
         \end{cases}
     \end{equation}
-    \begin{equation}
+    \begin{equation}\label{linearized}
         \begin{cases}
             A=
             \begin{bmatrix}
@@ -481,13 +481,45 @@ My name is \textit{Anton Brisilin}, and my email is
             \begin{bmatrix}
                 0 \\
                 0 \\
-                0.086 \\
+                0.294 \\
                 0.294 \\
             \end{bmatrix}
         \end{cases}
     \end{equation}
-    All the derivatives were computed with Wolfram Alpha and my calculator.
-    Inputs for Wolfram differentiation can be found in \texttt{Task2/wolfram\_inputs.txt}
+    All the derivatives were computed with Matlab.
+    Scripts for differentiation can be found in \texttt{Task2/diff.m}
+    \subsection{Stability checking}
+    I will check stability with looking to eigenvalues of $A$, obtained in 
+    \ref{linearized}. If all of them have negative real parts, then system is 
+    stable. Using \texttt{eig()} from \texttt{numpy} I obtained:
+    \begin{equation*}
+        eigenvalues = 
+        \begin{bmatrix}
+            0\\
+            0\\
+            6.13\\
+            -6.13
+        \end{bmatrix}
+    \end{equation*}
+    It can be seen, that there is a positive-valued eigenvalue of $A$, so the 
+    linearized system is not stable.
+    \subsection{Controllability checking}
+    For the linear system to be controllable, the next condition should hold:\\
+    If $\dot x = Ax + B$, then rank of $\Gamma = 
+    \begin{bmatrix}
+        B & AB & A^2B & A^3B
+    \end{bmatrix}$ should be equal to the dimension of $A$ (in my case 4).
+    Calculation of matrix $\Gamma$ can be found in \texttt{Task2/contr.m}.
+    \begin{equation}
+        \Gamma = 
+        \begin{bmatrix}
+        0 & 0.2940 & 0 & 6.9560\\
+        0 & 0.2940 & 0 & 11.0544\\
+        0.2940 & 0 & 6.9560 & 0\\
+        0.2940 & 0 & 11.0544 & 0\\
+        \end{bmatrix}
+    \end{equation}
+    It is visible, that rank of this matrix is 4, which is also confirmed by Matlab.
 \section{Used software.}
 \begin{itemize}
     \item Python 3.8.1
