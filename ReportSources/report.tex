@@ -9,6 +9,10 @@
 \definecolor{codegreen}{rgb}{0,0.6,0}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
 \definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\definecolor{linkcolor}{HTML}{799BF3}
+\definecolor{urlcolor}{HTML}{799BF3} 
+\hypersetup{pdfstartview=FitH,  linkcolor=linkcolor,urlcolor=urlcolor, colorlinks=true}
+
 
 \lstdefinestyle{mystyle}{
     backgroundcolor=\color{backcolour},   
@@ -468,6 +472,8 @@ My name is \textit{Anton Brisilin}, and my email is
         {11.6 - 8.2cos^2(z_2)}\\
         \end{cases}
     \end{equation}
+    And let's select one output among all state variables - I have chosen position
+    ($x$). Here is obtained state-space model:\\
     \begin{equation}\label{linearized}
         \begin{cases}
             A=
@@ -476,21 +482,30 @@ My name is \textit{Anton Brisilin}, and my email is
                 0 & 0 & 0 & 1 \\
                 0 & 23.66 & 0 & 0\\
                 0 & 37.6  & 0 & 0\\
-            \end{bmatrix}\\
+            \end{bmatrix}
             B=
             \begin{bmatrix}
                 0 \\
                 0 \\
                 0.294 \\
                 0.294 \\
+            \end{bmatrix}\\
+            \\
+            C=
+            \begin{bmatrix}
+                1 & 0 & 0 & 0\\
+            \end{bmatrix}\ 
+            D=
+            \begin{bmatrix}
+                0
             \end{bmatrix}
         \end{cases}
     \end{equation}
     All the derivatives were computed with Matlab.
     Scripts for differentiation can be found in \texttt{Task2/diff.m}
-    \subsection{Stability checking}
+    \subsection{Stability checking}\label{eigenvals}
     I will check stability with looking to eigenvalues of $A$, obtained in 
-    \ref{linearized}. If all of them have negative real parts, then system is 
+    (\ref{linearized}). If all of them have negative real parts, then system is 
     stable. Using \texttt{eig()} from \texttt{numpy} I obtained:
     \begin{equation*}
         eigenvalues = 
@@ -520,6 +535,62 @@ My name is \textit{Anton Brisilin}, and my email is
         \end{bmatrix}
     \end{equation}
     It is visible, that rank of this matrix is 4, which is also confirmed by Matlab.
+    Hence, the system is controllable.
+    \subsection{Design a state feedback controller}
+    \href{https://en.wikipedia.org/wiki/Full_state_feedback}{According to Wikipedia},
+    state feedback controller is the controller designed using pole-placement
+    method.\\
+    The task now is to determine where desired poles should be, and then 
+    design such controller that will force the actual poles be at the location 
+    of desired ones.\\
+    For now, poles of unstabilized system is equal to the eigenvalues of system,
+    that were found in \ref{eigenvals}.\\
+    Let's set all poles be negative to make the system stable.
+    I have chosen poles $P = [-1, -2\pm i, -3]$.\\
+    As the Python solution I found \texttt{scipy.signal.place\_poles()} function,
+    that finds gain matrix $K$, that can be used in closed-loop system model:
+    \begin{equation}
+        \begin{cases}
+            \dot x = Ax + Bu\\
+            u = -Kx
+        \end{cases}
+    \end{equation}
+    Here, are the step responses of system with 4 different initial condition, 
+    chosen in random.
+    \begin{center}
+        \includegraphics[width=0.49\linewidth]{../Task2/Fig1.pdf}
+        \includegraphics[width=0.49\linewidth]{../Task2/Fig2.pdf}
+    \end{center}
+    \begin{center}
+        \includegraphics[width=0.49\linewidth]{../Task2/Fig3.pdf}
+        \includegraphics[width=0.49\linewidth]{../Task2/Fig4.pdf}
+    \end{center}
+    As it can be seen, all of them are going to stable state, with settling time
+    about 5 seconds, but has large overshoot.\\
+    The Python code of solution is located at \texttt{Task2/pole\_placement.py}.\\
+    In Matlab I used \texttt{rlocus()} function to view Root-Locus plot of the 
+    system. Unfortunately, \texttt{controlSystemDesigner} does not work properly
+    on my version of Matlab, and shows wrong step response. So I looked at the 
+    plot, and added and removed poles, controlling my step response.
+    Initially, my Root-Locus plot was looking like this:\\
+    \begin{center}
+        \includegraphics[width=0.7\linewidth]{../Task2/RLinit.pdf}
+    \end{center}
+    As it can be seen, there is positive pole, so i added zero at this point to 
+    eliminate its influence. Then, I added two zeroes at the origin, and two poles
+    at left half-plane, to make number of poles greater than number of zeroes, as 
+    written \href{https://en.wikibooks.org/wiki/Control_Systems/Poles_and_Zeros}{there}.
+    Now, my obtained Root-Locus plot is:
+    \begin{center}
+        \includegraphics[width=0.7\linewidth]{../Task2/RLtuned.pdf}
+    \end{center}
+    And step response of the system, is here:
+    \begin{center}
+        \includegraphics[width=0.7\linewidth]{../Task2/Step.pdf}
+    \end{center}
+    As it can be seen, output of the system is pretty stable, with steady-state 
+    error around $2{e-2}$. Full code of the solution can be found in 
+    \texttt{Task2/design.m}.
 \section{Used software.}
 \begin{itemize}
     \item Python 3.8.1
