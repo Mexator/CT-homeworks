@@ -81,7 +81,7 @@ for the pendulum on a cart system:
 Just like in the previous assignment, I should linearize it by computing derivatives.
 I will not pay too much attention to it, the script for computing derivatives is 
 located as \texttt{Task2/diff.m}
-\begin{equation}
+\begin{equation}\label{linearized}
     \begin{bmatrix}
         \delta \dot x\\
         \delta \dot \theta\\
@@ -102,9 +102,68 @@ located as \texttt{Task2/diff.m}
         0.066\\
         0.066\\
     \end{bmatrix}
+    u
 \end{equation}
 \subsection{Prove that it is possible to design state observer of the linearized
 system}
+In order to make possible existence of state observer, the observed system should
+be fully observable.\\
+To prove observability of the obtained system, I will use Principle of Duality.
+It says, that if we have system
+\begin{equation*}    
+    \begin{cases}
+        \dot x = Ax + Bu\\
+        y = Cx + Du
+    \end{cases}
+\end{equation*}
+then we can determine whether it is observable or not by considering controllability 
+of its dual system, that is:
+\begin{equation*}    
+    \begin{cases}
+        \dot z = A^*z + C^*k\\
+        t = B^*z
+    \end{cases}
+\end{equation*}
+where $A^*, B^*, C^*, D^*$ are conjugate transposes of matrices $A,B,C$ and $D$ respectively.
+In our case $A$ and $B$ are same as in (\ref{linearized}). Matrix $C$ looks like this:
+\begin{equation*}
+    C=
+    \begin{bmatrix}
+        1 & 0 & 0 & 0\\
+        0 & 1 & 0 & 0\\
+        0 & 0 & 0 & 0\\
+        0 & 0 & 0 & 0\\
+    \end{bmatrix}
+\end{equation*}
+Thus, our conjugate transpose matrices are
+\begin{equation*}
+    \begin{cases}
+        A^*= 
+        \begin{bmatrix}
+            0 & 0 & 0 & 0\\
+            0 & 0 & 0.7796 & 30.256\\
+            1 & 0 & 0 & 0\\
+            0 & 1 & 0 & 0\\
+        \end{bmatrix}\\
+        B^*=
+        \begin{bmatrix}
+            0 & 0 &  0.066 & 0.066 
+        \end{bmatrix}\\
+        C^*=
+        \begin{bmatrix}
+            1 & 0 & 0 & 0\\
+            0 & 1 & 0 & 0\\
+            0 & 0 & 0 & 0\\
+            0 & 0 & 0 & 0\\
+        \end{bmatrix}\\
+    \end{cases}
+\end{equation*}
+According to Ogata, "necessary and sufficient condition for complete observability [of my first system]
+is that the rank of the $n\times nm$ matrix $[C^* | A^*C^* | \dots | (A^*)^{(n-1)}C^*]$
+be $n$". Fortunately, Matlab has built-in function to check for controllability 
+building controllability matrix. By checking its rank (that is 4 - the number of 
+dimensions of $A$) with script in \texttt{Task2/contr.m}, we cane make conclusion,
+that it is observable.
 
 \section{Used software}
 \begin{itemize}
