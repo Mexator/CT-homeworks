@@ -32,7 +32,7 @@
 
 \pagestyle{fancy}
 \fancyhf{}
-\lhead{Contol theory Homework \#1 report}
+\lhead{Contol theory Homework \#5 report}
 \rhead{Anton Brisilin, BS18-02 Student}
 \fancyfoot[R]{\today}
 \fancyfoot[C]{\thepage}
@@ -45,6 +45,66 @@ My name is \textit{Anton Brisilin}, and my email is
 \textit{a.brisilin@innopolis.university}, so my generated variant is \textbf{F}.
 
 \section{Task 2}
+First, lets obtain our new linearized system (with new coefficients).\\
+From the previous assignment I obtained such nonlinear dynamics equation 
+for the pendulum on a cart system:
+\begin{equation*}
+    \begin{bmatrix}
+        \dot x\\
+        \dot \theta\\
+        \ddot x\\
+        \ddot \theta    
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+        \dot x\\
+        \dot \theta\\
+        \frac
+        {- mlsin(\theta)\dot \theta^2 + mgsin(\theta)cos(\theta)}
+        {(M+m) - mcos^2(\theta)}\\
+        \frac
+        {(M+m)gsin(\theta) - mlcos(\theta)sin(\theta)\dot \theta^2}
+        {l((M+m) - mcos^2(\theta))}
+    \end{bmatrix}
+    +
+    \begin{bmatrix}
+        0\\0\\
+        \frac
+        {1}
+        {(M+m) - mcos^2(\theta)}\\
+        \frac
+        {cos(\theta)}
+        {(M+m) - mcos^2(\theta)}
+    \end{bmatrix}
+    u
+\end{equation*}
+Just like in the previous assignment, I should linearize it by computing derivatives.
+I will not pay too much attention to it, the script for computing derivatives is 
+located as \texttt{Task2/diff.m}
+\begin{equation}
+    \begin{bmatrix}
+        \delta \dot x\\
+        \delta \dot \theta\\
+        \delta \dot x\\
+        \delta \ddot \theta\\
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+        0 & 0 & 1 & 0 \\
+        0 & 0 & 0 & 1 \\
+        0 & 0.7796 & 0 & 0\\
+        0 & 30.256 & 0 & 0\\
+    \end{bmatrix}
+    +
+    \begin{bmatrix}
+        0\\
+        0\\
+        0.066\\
+        0.066\\
+    \end{bmatrix}
+\end{equation}
+\subsection{Prove that it is possible to design state observer of the linearized
+system}
 
 \section{Used software}
 \begin{itemize}
