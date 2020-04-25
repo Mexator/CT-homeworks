@@ -159,11 +159,36 @@ Thus, our conjugate transpose matrices are
     \end{cases}
 \end{equation*}
 According to Ogata, "necessary and sufficient condition for complete observability [of my first system]
-is that the rank of the $n\times nm$ matrix $[C^* | A^*C^* | \dots | (A^*)^{(n-1)}C^*]$
+is that the rank of the $n\times nm$ matrix 
+\begin{center}
+    $[C^* | A^*C^* | \dots | (A^*)^{(n-1)}C^*]$
+\end{center}
 be $n$". Fortunately, Matlab has built-in function to check for controllability 
 building controllability matrix. By checking its rank (that is 4 - the number of 
 dimensions of $A$) with script in \texttt{Task2/contr.m}, we cane make conclusion,
 that it is observable.
+
+\subsection{For open-loop observation: is the error dynamics stable?}
+Open-loop observation: the idea is that if we know exact model, and initial 
+conditions, we can estimate state of the system even not considering input and 
+output.\\
+Let's look at our linearized system, and check it for stability by looking at 
+eigenvalues of $A$.
+\begin{equation*}
+    eig(A) = 
+    \begin{bmatrix}
+        0. & 0. & 5.50054543 & -5.50054543
+    \end{bmatrix}
+\end{equation*}  
+As we can see, system is not stable, hence error dynamics (\ref{error_dyn}) is not 
+stable,
+\begin{equation} \label{error_dyn}
+    \dot \epsilon = A\epsilon,
+\end{equation} 
+too. We can not say that error eventually will go to zero, because it 
+will not, if observer used in the model considers initial conditions different 
+from actual ones.
+\subsection{Design Luenberger observer}
 
 \section{Used software}
 \begin{itemize}
