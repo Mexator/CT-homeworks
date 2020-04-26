@@ -85,7 +85,7 @@ located as \texttt{Task2/diff.m}
     \begin{bmatrix}
         \delta \dot x\\
         \delta \dot \theta\\
-        \delta \dot x\\
+        \delta \ddot x\\
         \delta \ddot \theta\\
     \end{bmatrix}
     =
@@ -94,6 +94,12 @@ located as \texttt{Task2/diff.m}
         0 & 0 & 0 & 1 \\
         0 & 0.7796 & 0 & 0\\
         0 & 30.256 & 0 & 0\\
+    \end{bmatrix}
+    \begin{bmatrix}
+        \delta x\\
+        \delta \theta\\
+        \delta \dot x\\
+        \delta \dot \theta\\
     \end{bmatrix}
     +
     \begin{bmatrix}
@@ -238,7 +244,14 @@ differs only in way how we find $L$, so the model is actually the same. On each
 step I integrating model of the actual system, to find the output that it produces, 
 and feed this output to the estimator. The estimator adjusts its estimation to
 be closer to actual state of the system.
-
+\subsection{Design state-feedback controller}
+For simplicity I decided to design state feedback controller just like in the 
+previous homework - with pole-placement method. The controller code can be found 
+at \texttt{Task2/state\_feedback\_controller.py}.
+Here is its output of the system with controller:
+\begin{center}
+    \includegraphics[width=\linewidth]{../Task2/out.pdf}
+\end{center}
 
 \section{Used software}
 \begin{itemize}

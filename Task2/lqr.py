@@ -1,23 +1,23 @@
-from control import lqr, ctrb
-import poleplace
+from control import lqr
 import numpy as np
 
-A_s=poleplace.A_s
-C_s=poleplace.C_s
+def get_L(A,C):
+    A_s = A.T 
+    C_s = C.T
 
+    Q = np.array([
+        [1, 0, 0, 0],
+        [0, 1, 0, 0],
+        [0, 0, 1, 0],
+        [0, 0, 0, 1],
+    ])
+    Q *= 100
+    R = np.array([
+        [1, 0],
+        [0, 1],
+    ])
+    K,S,E = lqr(A_s,C_s,Q,R)
 
-Q = np.array([
-    [1, 0, 0, 0],
-    [0, 1, 0, 0],
-    [0, 0, 1, 0],
-    [0, 0, 0, 1],
-])
-Q *= 100
-R = np.array([
-    [1, 0],
-    [0, 1],
-])
-K,S,E = lqr(A_s,C_s,Q,R)
-
-L = np.asarray(K.transpose())
-# print(L)
+    L = np.asarray(K.transpose())
+    # print(L)
+    return L
