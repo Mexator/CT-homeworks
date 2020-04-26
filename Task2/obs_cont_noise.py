@@ -6,6 +6,11 @@ import matplotlib.pyplot as plt
 
 import lqr
 
+START=0
+STOP=5
+STEP=0.01
+COUNT = int((STOP-START)/STEP)
+
 A = np.asarray([
     [0, 0, 1, 0],
     [0, 0, 0, 1],
@@ -35,38 +40,55 @@ L = lqr.get_L(A-B.dot(K), C)
 def actual_sys(x, t):
     return (A-B.dot(K)).dot(x)
 
+def euler(f,y0,a=START,b=STOP,h=STEP,order=4):
+    count = int((b-a)/h)
+    ts=np.zeros(count)
+    ys=np.zeros((count,order))
+    t,y = a,y0
+    ind = 0
+    while t < b and ind < int((b-a)/h):
+        ts[ind] = t
+        ys[ind] = y
+        t += h
+        y += h * f(y,t, count=ind)
+        ind += 1
+    return (ts,ys)
 
-def estimated_sys(x_hat, t):
+noise = np.random.normal(0,1,(COUNT,2))
+
+def estimated_sys(x_hat, t, count=0):
     x_hat_r = x_hat.reshape(4, 1)
 
     temp_space = [0, t]
 
-    x = odeint(actual_sys, initial, temp_space)[-1, :]
-    x = x.reshape(4, 1)
+    y = C.dot(odeint(actual_sys, initial, temp_space)[-1, :])
+    y += noise[count]
+    y = y.reshape(2, 1)
 
-    noise = np.random.normal(0,1,1)
+    y_hat = C.dot(x_hat)
+    y_hat = y_hat.reshape(2, 1)
 
-    delta_y = C.dot(x - x_hat_r) + noise
+    return (actual_sys(x_hat,t).reshape((4,1)) + L.dot(y - y_hat)).reshape((4,))
+ 
 
-    return (actual_sys(x,t).reshape((4,1)) + L.dot(delta_y).reshape((4,)))
-
-
-initial = [randint(0, 10) for _ in range(4)]
-estimator_initial = np.array([0 for _ in range(4)])
+initial = np.asarray([randint(0, 10) for _ in range(4)], dtype=np.float)
+estimator_initial = np.asarray([0 for _ in range(4)],dtype=np.float64)
 space = np.arange(start=0, stop=5, step=0.01)
 
 sol = odeint(actual_sys, initial, space)[:,0:2]
-estimation = odeint(estimated_sys, estimator_initial, space)[:,0:2]
-err = estimation - sol
+
+estimation = euler(estimated_sys,estimator_initial,0,5,0.01)
+err = estimation[1][:,:2] - sol
 
 plt.subplot(3, 1, 1)
 plt.title("actual system output")
 plt.plot(space, sol)
 plt.subplot(3, 1, 2)
-plt.plot(space, estimation)
+
+plt.plot(estimation[0],estimation[1][:,:2])
 plt.title("estimated output")
 plt.subplot(3, 1, 3)
 plt.title("output error")
 plt.plot(space, err)
-plt.savefig("est_cont_out.pdf")
+plt.savefig("est_cont_noise_out.pdf")
 plt.show()
