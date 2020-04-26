@@ -131,8 +131,6 @@ In our case $A$ and $B$ are same as in (\ref{linearized}). Matrix $C$ looks like
     \begin{bmatrix}
         1 & 0 & 0 & 0\\
         0 & 1 & 0 & 0\\
-        0 & 0 & 0 & 0\\
-        0 & 0 & 0 & 0\\
     \end{bmatrix}
 \end{equation*}
 Thus, our conjugate transpose matrices are
@@ -151,10 +149,10 @@ Thus, our conjugate transpose matrices are
         \end{bmatrix}\\
         C^*=
         \begin{bmatrix}
-            1 & 0 & 0 & 0\\
-            0 & 1 & 0 & 0\\
-            0 & 0 & 0 & 0\\
-            0 & 0 & 0 & 0\\
+            1 & 0 \\
+            0 & 1 \\
+            0 & 0 \\
+            0 & 0 \\
         \end{bmatrix}\\
     \end{cases}
 \end{equation*}
@@ -189,6 +187,58 @@ too. We can not say that error eventually will go to zero, because it
 will not, if observer used in the model considers initial conditions different 
 from actual ones.
 \subsection{Design Luenberger observer}
+Luenberger observer is also called the Predictor-Corrector observer. Its inputs 
+are system input $u$ and $\tilde{y} = y - \hat{y}$. It is described by the following
+formula: $\hat {\dot x}=A \hat x + Bu + L(y - \hat y)$.\\
+To design a Luenberger observer means to find such matrix $L$ that will minimize
+the output error and make it stable. 
+\begin{equation*}
+    \dot \epsilon = (A - LC)\epsilon
+\end{equation*} 
+Hence, we need to find such $L$ (that is called, according to [1] "user selectable 
+gain matrix") that will make $eig(A-LC) < 0$.\\
+Our $A$ is 4x4, $C$ is 2x4. Then, the $L$ should be 4x2.\\
+First, I will use pole-placement for dual system to design the observer gain matrix.
+I have chosen eigenvalues with negative real parts, just to make sure that my 
+error dynamics will become stable eventually. My desired poles are:
+\lstinputlisting[language=Python, firstline=15, lastline=15]{../Task2/poleplace.py},
+which leads to  
+\begin{equation*}
+    L =
+    \begin{bmatrix}
+        5 & 1\\
+        1 & 5\\
+        5.5 & 3.2796\\
+        2.5 & 35.756
+    \end{bmatrix}
+\end{equation*}
+Computations of L are located at the \texttt{Task2/poleplace.py}.\\
+As second approach i will use LQR method. Just like in previous case, I will consider
+dual system. I used \texttt{control.lqr()} python function, because I did not 
+succeed in implementing LQR for previous homework.\\
+I set
+\begin{equation*}
+    Q=100 * I_4, R=I_2
+\end{equation*}
+because I actually don't care about the 'actuator effort' in this case, because
+it is just simulation of a real system. Thus I found new matrix $L$, that is
+\begin{equation*}
+    L=
+    \begin{bmatrix}
+        10.95558675  & 0.07458349\\
+        0.07458349   & 14.97419382\\
+        10.01522191  & 1.3301508 \\
+        0.60378264   & 62.1160217 \\
+    \end{bmatrix}
+\end{equation*}
+Calculations of $L$ with LQR can be found in \texttt{Task2/lqr.py}\\
+The estimator model can be found in \texttt{Task2/estimator\_model.py}.\\
+It is needed to notice, that designing the estimator with pole-placement and LQR
+differs only in way how we find $L$, so the model is actually the same. On each 
+step I integrating model of the actual system, to find the output that it produces, 
+and feed this output to the estimator. The estimator adjusts its estimation to
+be closer to actual state of the system.
+
 
 \section{Used software}
 \begin{itemize}
@@ -197,4 +247,9 @@ from actual ones.
     \item draw.io
 \end{itemize}
 All software was run under Manjaro Linux with 5.4.18-rt kernel
+\section{References}
+\begin{itemize}
+    \item \href{https://ocw.mit.edu/courses/aeronautics-and-astronautics/16-30-feedback-control-systems-fall-2010/lecture-notes/MIT16_30F10_lec14.pdf}
+    {MIT OpenCourseWare}
+\end{itemize}
 \end{document}
