@@ -36,9 +36,10 @@ K = var.gain_matrix
 
 L = lqr.get_L(A-B.dot(K), C)
 
+dynamics_noise = np.random.normal(0,1,(COUNT,4))
 
-def actual_sys(x, t):
-    return (A-B.dot(K)).dot(x)
+def actual_sys(x, t, count=0):
+    return (A-B.dot(K)).dot(x) + dynamics_noise[count]
 
 def euler(f,y0,a=START,b=STOP,h=STEP,order=4):
     count = int((b-a)/h)
@@ -54,15 +55,16 @@ def euler(f,y0,a=START,b=STOP,h=STEP,order=4):
         ind += 1
     return (ts,ys)
 
-noise = np.random.normal(0,1,(COUNT,2))
+output_noise = np.random.normal(0,1,(COUNT,2))
 
 def estimated_sys(x_hat, t, count=0):
     x_hat_r = x_hat.reshape(4, 1)
 
     temp_space = [0, t]
 
-    y = C.dot(odeint(actual_sys, initial, temp_space)[-1, :])
-    y += noise[count]
+    x = euler(actual_sys, initial, b=t, h=STEP)[1][-1]
+    y = C.dot(x)
+    y += output_noise[count]
     y = y.reshape(2, 1)
 
     y_hat = C.dot(x_hat)
@@ -72,12 +74,12 @@ def estimated_sys(x_hat, t, count=0):
  
 
 initial = np.asarray([randint(0, 10) for _ in range(4)], dtype=np.float)
-estimator_initial = np.asarray([0 for _ in range(4)],dtype=np.float64)
+estimator_initial = np.asarray([0 for _ in range(4)], dtype=np.float64)
 space = np.arange(start=0, stop=5, step=0.01)
 
-sol = odeint(actual_sys, initial, space)[:,0:2]
+sol = euler(actual_sys, initial)[1][:,:2]
 
-estimation = euler(estimated_sys,estimator_initial,0,5,0.01)
+estimation = euler(estimated_sys,estimator_initial)
 err = estimation[1][:,:2] - sol
 
 plt.subplot(3, 1, 1)
@@ -90,5 +92,5 @@ plt.title("estimated output")
 plt.subplot(3, 1, 3)
 plt.title("output error")
 plt.plot(space, err)
-plt.savefig("est_cont_noise_out.pdf")
+plt.savefig("est_cont_more_noise_out.pdf")
 plt.show()

@@ -287,7 +287,15 @@ And here is the plot of estimator output with noise.
 \begin{center}
     \includegraphics[width=\linewidth]{../Task2/est_cont_noise_out.pdf}
 \end{center}
-From this it is visible, that output is highly affects estimation accuracy.
+From this it is visible, that output is highly affects estimation accuracy. Full
+code of the solution can be found in \texttt{Task2/obs\_cont\_noise.py}.
+\subsection{Add noise to dynamics}
+Addition of noise to the dynamics of the system leads to very wrong estimation results.
+It can easily be seen from the plot, the dynamics of the estimator does not reflect
+the actual system dynamics. However, both of them are seems to be stable.
+\begin{center}
+    \includegraphics[width=\linewidth]{../Task2/est_cont_more_noise_out.pdf}
+\end{center}
 
 \section{Used software}
 \begin{itemize}
