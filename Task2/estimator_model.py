@@ -40,10 +40,13 @@ def estimator(x_hat, t):
 
     temp_space = [0, t]
 
-    x = odeint(system, initial, temp_space)[-1, :]
-    x = x.reshape(4, 1)
+    y = C.dot(odeint(system, initial, temp_space)[-1, :])
+    y = y.reshape(2, 1)
 
-    return system(x_hat, t) + L.dot(C.dot(x-x_hat_r)).reshape((4,))
+    y_hat = C.dot(x_hat)
+    y_hat = y_hat.reshape(2, 1)
+
+    return (system(x_hat,t).reshape((4,1)) + L.dot(y - y_hat)).reshape((4,))
 
 
 def error(error_v, t):

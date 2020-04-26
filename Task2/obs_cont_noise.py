@@ -37,16 +37,18 @@ def actual_sys(x, t):
 
 
 def estimated_sys(x_hat, t):
+    x_hat_r = x_hat.reshape(4, 1)
 
     temp_space = [0, t]
 
-    y = C.dot(odeint(actual_sys, initial, temp_space)[-1, :])
-    y = y.reshape(2, 1)
+    x = odeint(actual_sys, initial, temp_space)[-1, :]
+    x = x.reshape(4, 1)
 
-    y_hat = C.dot(x_hat)
-    y_hat = y_hat.reshape(2, 1)
+    noise = np.random.normal(0,1,1)
 
-    return (actual_sys(x_hat,t).reshape((4,1)) + L.dot(y - y_hat)).reshape((4,))
+    delta_y = C.dot(x - x_hat_r) + noise
+
+    return (actual_sys(x,t).reshape((4,1)) + L.dot(delta_y).reshape((4,)))
 
 
 initial = [randint(0, 10) for _ in range(4)]
