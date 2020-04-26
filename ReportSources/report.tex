@@ -252,6 +252,27 @@ Here is its output of the system with controller:
 \begin{center}
     \includegraphics[width=\linewidth]{../Task2/out.pdf}
 \end{center}
+\subsection{Simulate the system with observer and controller}
+Designing an observer to estimate system with controller is pretty the same as 
+doing it without one. The main difference is that our dynamics matrix that we feed
+to LQR is not $A$, but $A-BK$. Everything other is pretty the same: we finding 
+control gain $K$, creating controller based on it just like in the previous section,
+then designing observer with new dynamics matrix, just like in section 2.3.
+So our algorithm is 
+\begin{enumerate}
+    \item Find gain $K$
+    \item Find gain $L$ for $A = A-BK$ and $C=C$
+    \item Substitute $K$ into the controller
+    \item Substitute $L$ and $K$ into the estimator
+    \item Simulate work of the systems
+\end{enumerate}
+I used Python to accomplish the task, just like before. The code of solution is 
+located at \texttt{Task2/obs\_cont.py}
+Here is the plot of stabilized system output, estimated one and estimation error,
+computed as $\epsilon = y - \hat y$.
+\includegraphics[width=\linewidth]{../Task2/est_cont_out.pdf}
+As it is seen from the plot, the system estimation error converges to 
+zero eventually, and both estimation and actual system simulation are stable.
 
 \section{Used software}
 \begin{itemize}
