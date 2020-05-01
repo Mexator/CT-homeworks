@@ -5,10 +5,7 @@
 \usepackage{hyperref}
 \usepackage{listings}
 \usepackage{xcolor}
-\usepackage{calc}
-\usepackage{graphicx}
-\usepackage{float}
- 
+\usepackage{fancyhdr}
 \definecolor{codegreen}{rgb}{0,0.6,0}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
 \definecolor{backcolour}{rgb}{0.95,0.95,0.92}
@@ -33,230 +30,283 @@
 
 \lstset{style=mystyle}
 
-\title{Contol theory Homework \#2 report.\\Variant F.}
-\author{Anton Brisilin, BS18-02 Student}
-\date{\today}
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Contol theory Homework \#5 report}
+\rhead{Anton Brisilin, BS18-02 Student}
+\fancyfoot[R]{\today}
+\fancyfoot[C]{\thepage}
+\renewcommand{\footrulewidth}{1pt}
+\renewcommand{\headrulewidth}{1pt}
+
 \begin{document}
-\maketitle
-\section{Task 1.}
-\subsection*{A. Calculate total transfer function}
-    Calculate total Transfer Function of the system:
-    \begin{center}
-        \includegraphics[width=\linewidth/2]{../Task1/ToReport/T1Step0.pdf}
-    \end{center}
-    As a first step I will simplify feedback chain:
-    \begin{center}
-        \includegraphics[width=\linewidth/2]{../Task1/ToReport/T1Step1.pdf}
-    \end{center}
-    And then our system can be represented as one block:
-    \begin{center}
-        \includegraphics[width=0.3\linewidth]{../Task1/ToReport/T1Step2.pdf}
-    \end{center}
-    In variant F I have:
-    \begin{equation*}
-    W_1 = \frac{s+3}{s+1}, W_2 = \frac{1}{s+2}, 
-    W_3 = \frac{1}{s+0.1}, W_4 = \frac{1}{2s+3}
-    \end{equation*}
-    Substituting $W_1, ... ,W_4$ to the system block:
-    \footnote{This answer was get with Matlab script simplify\_fraction.m in Task1 folder}
-    \begin{equation*}
-    W_1 * W_3 * \frac{W_2}{1+W2*W4} = 
-    \frac{20s^2 + 90s + 90}{20s^4 + 92s^3 + 149s^2 + 84s + 7}
-    \end{equation*}
-    Hence, our total Transfer Function is 
-    \begin{equation}
-        W = \frac{20s^2 + 90s + 90}{20s^4 + 92s^3 + 149s^2 + 84s + 7}
-    \end{equation}
-    \subsection*{B. Build initial and simplified systems and analyse responses}
-    \begin{center}
-        \includegraphics[width=\linewidth]{../Task1/ToReport/T1Model.pdf}
-        Simulink model for response analysis. For analysing different responses,
-        one need to put signal source to input instead of the clock.
-    \end{center}
-    Step, Impulse, and Frequency responses plots. On each plot blue line is 
-    system input, red one is the initial system output, and the orange one is
-    system output after simplification:\\
-    \begin{figure}[H]
-        \centering
-        \includegraphics[width=0.35\linewidth]{../Task1/ToReport/T1StepResponse.pdf}        
-        \includegraphics[width=0.35\linewidth]{../Task1/ToReport/T1ImpulseResponse.pdf}\\
-        \caption{Step response (left) and Impulse response (right) plots}
-        \label{fig1}
-    \end{figure}
-    
-    \begin{figure}[H]
-        \centering
-        \includegraphics[width=0.35\linewidth]{../Task1/ToReport/T1FreqResponse.pdf}
-        \caption{Frequency response plot}
-        \label{fig2}
-    \end{figure}
+\section{Task 1}
+My name is \textit{Anton Brisilin}, and my email is 
+\textit{a.brisilin@innopolis.university}, so my generated variant is \textbf{F}.
 
-    Note, that plots look like there is only one output, but it is not true -- 
-    they are just very close to each other.
-
-    \subsection*{C. Bode and Pole-Zero map plots}
-    As a input signal, for which I will generate the plots I have chosen 
-    a Frequency response (sine function).
-    \begin{center}
-        \includegraphics[width=\linewidth]{../Task1/ToReport/T1Bode.pdf}\\
-        \includegraphics[width=\linewidth]{../Task1/ToReport/T1PoleZero.pdf}        
-    \end{center}
-    According to Matlab \texttt{pzmap()} function, our Transfer Function (1) has following poles 
-    and zeroes:
-    \begin{equation*}
-    poles =
+\section{Task 2}
+First, lets obtain our new linearized system (with new coefficients).\\
+From the previous assignment I obtained such nonlinear dynamics equation 
+for the pendulum on a cart system:
+\begin{equation*}
     \begin{bmatrix}
-      -1.7500 + 0.6614i\\
-      -1.7500 - 0.6614i\\
-      -1.0000 + 0.0000i\\
-      -0.1000 + 0.0000i
-    \end{bmatrix} 
-    zeroes =
-    \begin{bmatrix}
-        -3.0000\\
-        -1.5000
+        \dot x\\
+        \dot \theta\\
+        \ddot x\\
+        \ddot \theta    
     \end{bmatrix}
-    \end{equation*}
-    As it can be seen, all our poles have negative real part, and that says us 
-    that the system is stable.
-\newpage
-\section{Task 2.}
-    Find total Transfer Function of the system:
-    \begin{center}
-        \includegraphics[scale=0.5]{../Task2/ToReport/System.pdf}
-    \end{center}
-    Firstly, let's consider case when $f(t)=0$. In this case our Transfer
-    Function is $\frac{W}{1+W}$. Then we'll consider case, when $g(t)=0$, 
-    and our Transfer Function will be $M \times \frac{1}{1+W}$.
-    Hence, total transfer function for the system in general case is
-    \begin{equation*}
-        output = \frac{W}{1+W} \times g(t) + \frac{M}{1+W} \times f(t)
-    \end{equation*}  
-    In variant F I have:
-    \begin{equation*}
-    W(s) = \frac{s+1}{s^2+3s+2}, 
-    M(s) = \frac{1}{s+3}
-    \end{equation*}
-    After simplification of fractions with Matlab, we get 
-    \begin{equation*}
-        output = \frac{1}{s+3} \times g(t) + \frac{s+1}{(s+3)^2 \times f(t)}
-    \end{equation*}
+    =
+    \begin{bmatrix}
+        \dot x\\
+        \dot \theta\\
+        \frac
+        {- mlsin(\theta)\dot \theta^2 + mgsin(\theta)cos(\theta)}
+        {(M+m) - mcos^2(\theta)}\\
+        \frac
+        {(M+m)gsin(\theta) - mlcos(\theta)sin(\theta)\dot \theta^2}
+        {l((M+m) - mcos^2(\theta))}
+    \end{bmatrix}
+    +
+    \begin{bmatrix}
+        0\\0\\
+        \frac
+        {1}
+        {(M+m) - mcos^2(\theta)}\\
+        \frac
+        {cos(\theta)}
+        {(M+m) - mcos^2(\theta)}
+    \end{bmatrix}
+    u
+\end{equation*}
+Just like in the previous assignment, I should linearize it by computing derivatives.
+I will not pay too much attention to it, the script for computing derivatives is 
+located as \texttt{Task2/diff.m}
+\begin{equation}\label{linearized}
+    \begin{bmatrix}
+        \delta \dot x\\
+        \delta \dot \theta\\
+        \delta \ddot x\\
+        \delta \ddot \theta\\
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+        0 & 0 & 1 & 0 \\
+        0 & 0 & 0 & 1 \\
+        0 & 0.7796 & 0 & 0\\
+        0 & 30.256 & 0 & 0\\
+    \end{bmatrix}
+    \begin{bmatrix}
+        \delta x\\
+        \delta \theta\\
+        \delta \dot x\\
+        \delta \dot \theta\\
+    \end{bmatrix}
+    +
+    \begin{bmatrix}
+        0\\
+        0\\
+        0.066\\
+        0.066\\
+    \end{bmatrix}
+    u
+\end{equation}
+\subsection{Prove that it is possible to design state observer of the linearized
+system}
+In order to make possible existence of state observer, the observed system should
+be fully observable.\\
+To prove observability of the obtained system, I will use Principle of Duality.
+It says, that if we have system
+\begin{equation*}    
+    \begin{cases}
+        \dot x = Ax + Bu\\
+        y = Cx + Du
+    \end{cases}
+\end{equation*}
+then we can determine whether it is observable or not by considering controllability 
+of its dual system, that is:
+\begin{equation*}    
+    \begin{cases}
+        \dot z = A^*z + C^*k\\
+        t = B^*z
+    \end{cases}
+\end{equation*}
+where $A^*, B^*, C^*, D^*$ are conjugate transposes of matrices $A,B,C$ and $D$ respectively.
+In our case $A$ and $B$ are same as in (\ref{linearized}). Matrix $C$ looks like this:
+\begin{equation*}
+    C=
+    \begin{bmatrix}
+        1 & 0 & 0 & 0\\
+        0 & 1 & 0 & 0\\
+    \end{bmatrix}
+\end{equation*}
+Thus, our conjugate transpose matrices are
+\begin{equation*}
+    \begin{cases}
+        A^*= 
+        \begin{bmatrix}
+            0 & 0 & 0 & 0\\
+            0 & 0 & 0.7796 & 30.256\\
+            1 & 0 & 0 & 0\\
+            0 & 1 & 0 & 0\\
+        \end{bmatrix}\\
+        B^*=
+        \begin{bmatrix}
+            0 & 0 &  0.066 & 0.066 
+        \end{bmatrix}\\
+        C^*=
+        \begin{bmatrix}
+            1 & 0 \\
+            0 & 1 \\
+            0 & 0 \\
+            0 & 0 \\
+        \end{bmatrix}\\
+    \end{cases}
+\end{equation*}
+According to Ogata, "necessary and sufficient condition for complete observability [of my first system]
+is that the rank of the $n\times nm$ matrix 
+\begin{center}
+    $[C^* | A^*C^* | \dots | (A^*)^{(n-1)}C^*]$
+\end{center}
+be $n$". Fortunately, Matlab has built-in function to check for controllability 
+building controllability matrix. By checking its rank (that is 4 - the number of 
+dimensions of $A$) with script in \texttt{Task2/contr.m}, we cane make conclusion,
+that it is observable.
 
-\section{Task 3.}    
-    Find transfer function of the system.\\
-    In variant F I have:
-    \begin{equation*}
-        A = \begin{bmatrix}
-             1 & 0\\
-             2 & 1
-        \end{bmatrix},
-        B = \begin{bmatrix}
-            2 \\ 2
-        \end{bmatrix},
-        C = \begin{bmatrix}
-            -1 & 4
-        \end{bmatrix},
-        D = \begin{bmatrix}
-            2
-        \end{bmatrix}
-    \end{equation*}
-    Using Matlab we can obtain required Transfer Function with \texttt{ss2tf()}:
-    \lstinputlisting[language=matlab]{../Task3/ss_to_tf.m}
-    Hence, our Transfer Function is
-    \begin{equation*}
-        H(s) = \frac{2s^2 + 2s + 12}{s^2-2s+1}
-    \end{equation*} 
-    Matlab's \texttt{ss2tf()} uses the same formula as we used on labs to 
-    transform state-space model to Transfer Function: $C*(sI-A)^{-1}*B+D$, 
-    where $A$, $B$, $C$, and $D$ are the matrices of state-space model of the 
-    system. The other way to solve it - use the Matlab's representation of 
-    above formula, that is \texttt{C*inv(s*eye(2)-A)*B+D}, which will return 
-    vector of transfer fucntions. But to use \texttt{ss2tf()} for me is shorter 
-    and more convenient way.\\
-\section{Task 4.}
-    Find transfer function of the system.\\
-    In variant F I have:
-    \begin{equation*}
-        A = \begin{bmatrix}
-             2 & 1\\
-             -3 & 1
-        \end{bmatrix},
-        B = \begin{bmatrix}
-            -1 & 5 \\ 
-            3 & 1
-        \end{bmatrix},
-        C = \begin{bmatrix}
-            -2 & 0
-        \end{bmatrix},
-        D = \begin{bmatrix}
-            2 & 4
-        \end{bmatrix}
-    \end{equation*}
-    Using Matlab we can obtain required Transfer Function with \texttt{ss2tf()}:
-    \lstinputlisting[language=matlab]{../Task4/ss_to_tf.m}
-    Hence, our total Transfer Function is:
-    \begin{equation*}
-        H(s) = \frac{2s^2 - 4s + 2}{s^2 - 3 s + 5}  u_1 + 
-        \frac{4 s^2 - 22 s + 28}{s^2 - 3 s + 5} u_2
-    \end{equation*}
-\newpage
-\section{Task 5.}
-    Given system, variant F:
-    \begin{center}
-        \includegraphics[width=\linewidth]{../Task5/T5Source.pdf}
-    \end{center}
-    \subsection*{A. Assuming that x is 0:}
-    \begin{center}
-        \includegraphics[width=0.8\linewidth]{../Task5/T5Step1.pdf}
-    \end{center}
-    Simplifying series connection of $W6, W2, W4$ blocks:
-    \begin{center}
-        \includegraphics[width=0.8\linewidth]{../Task5/T5Step2.pdf}
-    \end{center}
-    Simplifying series connection of $W6*W2*W4$ and $W7$ blocks, and then series 
-    connection of resulting block with block $W8$:
-    \begin{center}
-        \includegraphics[width=\linewidth/2]{../Task5/T5Step3.pdf}
-    \end{center}
-    \subsection*{B. Assuming that f is 0:}
-    \begin{center}
-        \includegraphics[width=\linewidth]{../Task5/T5Step4.pdf}
-    \end{center}
-    Let's examine chains $W1, W7$, and $W1, W6, W5, W2, W4$ as separate 
-    subchains:
-    \begin{center}
-        \includegraphics[width=\linewidth]{../Task5/T5Step5.pdf}
-    \end{center}
-    Collapsing chains $W1,W6,W5$ and $W1, W7$  to blocks $W1 * W6 + W5$, and 
-    $W1 * W7$ respectively: 
-    \begin{center}
-        \includegraphics[width=\linewidth]{../Task5/T5Step6.pdf}
-    \end{center}
-    Simplifying series connection of $W1 * W6 + W5, W2, W4$ blocks:
-    \begin{center}
-        \includegraphics[width=\linewidth]{../Task5/T5Step7.pdf}
-    \end{center}
-    Simplifying parallel connection:
-    \begin{center}
-        \includegraphics[width=0.8\linewidth]{../Task5/T5Step8.pdf}
-    \end{center}
-    Simplifying series connection with block $W8$:
-    \begin{center}
-        \includegraphics[width=0.8\linewidth]{../Task5/T5Step9.pdf}
-    \end{center}
-    \subsection*{C. Total Transfer Function}
-    After all steps, our total Transfer Function will look like:
-    \begin{equation*}
-        output = W_8(((W_1 W_6 + W_5) W_2 W_4 + W_3 + W_1 W_7) \times x + 
-        (W_6 W_2 W_4 + W_7) \times f)
-    \end{equation*}
+\subsection{For open-loop observation: is the error dynamics stable?}
+Open-loop observation: the idea is that if we know exact model, and initial 
+conditions, we can estimate state of the system even not considering input and 
+output.\\
+Let's look at our linearized system, and check it for stability by looking at 
+eigenvalues of $A$.
+\begin{equation*}
+    eig(A) = 
+    \begin{bmatrix}
+        0. & 0. & 5.50054543 & -5.50054543
+    \end{bmatrix}
+\end{equation*}  
+As we can see, system is not stable, hence error dynamics (\ref{error_dyn}) is not 
+stable,
+\begin{equation} \label{error_dyn}
+    \dot \epsilon = A\epsilon,
+\end{equation} 
+too. We can not say that error eventually will go to zero, because it 
+will not, if observer used in the model considers initial conditions different 
+from actual ones.
+\subsection{Design Luenberger observer}
+Luenberger observer is also called the Predictor-Corrector observer. Its inputs 
+are system input $u$ and $\tilde{y} = y - \hat{y}$. It is described by the following
+formula: $\hat {\dot x}=A \hat x + Bu + L(y - \hat y)$.\\
+To design a Luenberger observer means to find such matrix $L$ that will minimize
+the output error and make it stable. 
+\begin{equation*}
+    \dot \epsilon = (A - LC)\epsilon
+\end{equation*} 
+Hence, we need to find such $L$ (that is called, according to [1] "user selectable 
+gain matrix") that will make $eig(A-LC) < 0$.\\
+Our $A$ is 4x4, $C$ is 2x4. Then, the $L$ should be 4x2.\\
+First, I will use pole-placement for dual system to design the observer gain matrix.
+I have chosen eigenvalues with negative real parts, just to make sure that my 
+error dynamics will become stable eventually. My desired poles are:
+\lstinputlisting[language=Python, firstline=15, lastline=15]{../Task2/poleplace.py},
+which leads to  
+\begin{equation*}
+    L =
+    \begin{bmatrix}
+        5 & 1\\
+        1 & 5\\
+        5.5 & 3.2796\\
+        2.5 & 35.756
+    \end{bmatrix}
+\end{equation*}
+Computations of L are located at the \texttt{Task2/poleplace.py}.\\
+As second approach i will use LQR method. Just like in previous case, I will consider
+dual system. I used \texttt{control.lqr()} python function, because I did not 
+succeed in implementing LQR for previous homework.\\
+I set
+\begin{equation*}
+    Q=100 * I_4, R=I_2
+\end{equation*}
+because I actually don't care about the 'actuator effort' in this case, because
+it is just simulation of a real system. Thus I found new matrix $L$, that is
+\begin{equation*}
+    L=
+    \begin{bmatrix}
+        10.95558675  & 0.07458349\\
+        0.07458349   & 14.97419382\\
+        10.01522191  & 1.3301508 \\
+        0.60378264   & 62.1160217 \\
+    \end{bmatrix}
+\end{equation*}
+Calculations of $L$ with LQR can be found in \texttt{Task2/lqr.py}\\
+The estimator model can be found in \texttt{Task2/estimator\_model.py}.\\
+It is needed to notice, that designing the estimator with pole-placement and LQR
+differs only in way how we find $L$, so the model is actually the same. On each 
+step I integrating model of the actual system, to find the output that it produces, 
+and feed this output to the estimator. The estimator adjusts its estimation to
+be closer to actual state of the system.
+\subsection{Design state-feedback controller}
+For simplicity I decided to design state feedback controller just like in the 
+previous homework - with pole-placement method. The controller code can be found 
+at \texttt{Task2/state\_feedback\_controller.py}.
+Here is its output of the system with controller:
+\begin{center}
+    \includegraphics[width=\linewidth]{../Task2/out.pdf}
+\end{center}
+\subsection{Simulate the system with observer and controller}
+Designing an observer to estimate system with controller is pretty the same as 
+doing it without one. The main difference is that our dynamics matrix that we feed
+to LQR is not $A$, but $A-BK$. Everything other is pretty the same: we finding 
+control gain $K$, creating controller based on it just like in the previous section,
+then designing observer with new dynamics matrix, just like in section 2.3.
+So our algorithm is 
+\begin{enumerate}
+    \item Find gain $K$
+    \item Find gain $L$ for $A = A-BK$ and $C=C$
+    \item Substitute $K$ into the controller
+    \item Substitute $L$ and $K$ into the estimator
+    \item Simulate work of the systems
+\end{enumerate}
+I used Python to accomplish the task, just like before. The code of solution is 
+located at \texttt{Task2/obs\_cont.py}
+Here is the plot of stabilized system output, estimated one and estimation error,
+computed as $\epsilon = y - \hat y$.
+\includegraphics[width=\linewidth]{../Task2/est_cont_out.pdf}
+As it is seen from the plot, the system estimation error converges to 
+zero eventually, and both estimation and actual system simulation are stable.
+\subsection{Add Additive White Gaussian Noise}
+My first attempt of adding White Gaussian noise was unsuccessful, because i tried
+to keep using \texttt{scipy.integrate.odeint()}, that does not support integration
+of stochastic differential equations, i.e. differential equation with stochastic 
+term - that is in my case the noise.
+I decided to use simple Euler numerical solver to integrate the system estimation:
+\lstinputlisting[language=Python,firstline=43, lastline=55]{../Task2/obs_cont_noise.py}
+As a noise model I took random variables generated by numpy with normal distribution
+with $\mu=0$ and $\sigma^2=1$. Estimator model with noise:
+\lstinputlisting[language=Python,firstline=57, lastline=71]{../Task2/obs_cont_noise.py}
+And here is the plot of estimator output with noise.
+\begin{center}
+    \includegraphics[width=\linewidth]{../Task2/est_cont_noise_out.pdf}
+\end{center}
+From this it is visible, that output is highly affects estimation accuracy. Full
+code of the solution can be found in \texttt{Task2/obs\_cont\_noise.py}.
+\subsection{Add noise to dynamics}
+Addition of noise to the dynamics of the system leads to very wrong estimation results.
+It can easily be seen from the plot, the dynamics of the estimator does not reflect
+the actual system dynamics. However, both of them are seems to be stable.
+\begin{center}
+    \includegraphics[width=\linewidth]{../Task2/est_cont_more_noise_out.pdf}
+\end{center}
 
-
-\section{Used software.}
+\section{Used software}
 \begin{itemize}
     \item Python 3.8.1
     \item Matlab R2018b 9.5.0
     \item draw.io
 \end{itemize}
 All software was run under Manjaro Linux with 5.4.18-rt kernel
+\section{References}
+\begin{itemize}
+    \item \href{https://ocw.mit.edu/courses/aeronautics-and-astronautics/16-30-feedback-control-systems-fall-2010/lecture-notes/MIT16_30F10_lec14.pdf}
+    {MIT OpenCourseWare}
+\end{itemize}
 \end{document}

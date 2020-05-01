@@ -2,6 +2,7 @@
 *.autosave
 *.aux
 *.out
+*/__pycache__/*
 !report.pdf
 ReportSources/*
 !*.tex
